@@ -27,7 +27,7 @@ namespace AutomationFramework.Test
         public void SetupTest()
         {
             clsReportResult.objTest = clsReportResult.objExtent.CreateTest(TestContext.CurrentContext.Test.Name);
-            fnOpenBrowser("Chrome");
+            fnOpenBrowser("Edge");
         }
 
         [Test]

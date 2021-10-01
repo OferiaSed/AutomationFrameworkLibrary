@@ -1,4 +1,5 @@
-﻿using OpenQA.Selenium;
+﻿using Microsoft.Edge.SeleniumTools;
+using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Support.UI;
 using System;
@@ -16,13 +17,13 @@ namespace AutomationFramework
 
         public IWebDriver fnOpenBrowser(string pstrBrowser, bool pblScreenShot = false)
         {
-            switch (pstrBrowser)
+            switch (pstrBrowser.ToUpper())
             {
-                case "Chrome":
+                case "CHROME":
 
-                    var options = new ChromeOptions();
-                    options.AddArgument("no-sandbox");
-                    objDriver = new ChromeDriver(ChromeDriverService.CreateDefaultService(), options, TimeSpan.FromMinutes(3));
+                    ChromeOptions optionsChrome = new ChromeOptions();
+                    optionsChrome.AddArgument("no-sandbox");
+                    objDriver = new ChromeDriver(ChromeDriverService.CreateDefaultService(), optionsChrome, TimeSpan.FromMinutes(3));
                     objDriver.Manage().Timeouts().PageLoad.Add(System.TimeSpan.FromSeconds(10));
                     wait = new WebDriverWait(objDriver, TimeSpan.FromSeconds(10));
                     objDriver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
@@ -34,6 +35,19 @@ namespace AutomationFramework
                     //objDriver.Manage().Window.Maximize();
                     clsReportResult.fnLog("OpenBrowser", "Step - Open Chrome Browser", "Info", false);
                     clsReportResult.fnLog("OpenBrowserPass", "Browser is openned correctly", "Pass", pblScreenShot);
+                    break;
+                case "EDGE":
+                    /*
+                    var optionsEdge = new EdgeOptions();
+                    optionsEdge.UseChromium = true;
+                    optionsEdge.BinaryLocation = @"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe";
+                    optionsEdge.AddArgument("no-sandbox");
+                    objDriver = new EdgeDriver(EdgeDriverService.CreateDefaultService(), optionsEdge, TimeSpan.FromMinutes(3));
+                    objDriver.Manage().Timeouts().PageLoad.Add(System.TimeSpan.FromSeconds(10));
+                    wait = new WebDriverWait(objDriver, TimeSpan.FromSeconds(10));
+                    objDriver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
+                    objDriver.Manage().Window.Maximize();
+                    */
                     break;
                 default:
                     break;

@@ -30,7 +30,6 @@ namespace AutomationFramework
                 if (blSuccess)
                 {
                     //To create report directory and add HTML report into it
-                    //objHtmlReporter = new ExtentHtmlReporter(clsDataDriven.strReportLocation + clsDataDriven.strExecutionDate + "_" + clsDataDriven.strReportName + @"\" + clsDataDriven.strReportName + ".html");
                     objHtmlReporter = new ExtentV3HtmlReporter(clsDataDriven.strReportLocation + clsDataDriven.strReportName + @"\" + clsDataDriven.strReportName + ".html");
 
                     objHtmlReporter.Config.ReportName = clsDataDriven.strReportName;

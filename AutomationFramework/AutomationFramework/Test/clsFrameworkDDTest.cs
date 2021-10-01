@@ -23,7 +23,7 @@ namespace AutomationFramework.Test
         public void SetupTest(string pstrTestCase)
         {
             clsReportResult.objTest = clsReportResult.objExtent.CreateTest(pstrTestCase);
-            fnOpenBrowser("Chrome");
+            fnOpenBrowser("Edge");
             Console.WriteLine("");
 
         }
