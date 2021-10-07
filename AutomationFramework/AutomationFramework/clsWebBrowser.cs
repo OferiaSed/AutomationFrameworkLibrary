@@ -38,7 +38,7 @@ namespace AutomationFramework
                     clsReportResult.fnLog("OpenBrowserPass", "Browser is openned correctly", "Pass", pblScreenShot);
                     break;
                 case "EDGE":
-                    var strDriverPath = fnGetProjectPath() + @"Debug\";
+                    var strDriverPath = fnGetProjectPath() + @"lib\";
                     var optionsEdge = new EdgeOptions();
                     optionsEdge.AddAdditionalCapability("UseChromium", true);
                     objDriver = new EdgeDriver(EdgeDriverService.CreateDefaultService(strDriverPath), optionsEdge, TimeSpan.FromMinutes(3));
@@ -70,7 +70,7 @@ namespace AutomationFramework
         private string fnGetProjectPath()
         {
             var strPath = System.Reflection.Assembly.GetCallingAssembly().CodeBase;
-            var strActualPath = strPath.Substring(0, strPath.LastIndexOf("Debug"));
+            var strActualPath = strPath.Substring(0, strPath.LastIndexOf("bin"));
             var strProjectPath = new Uri(strActualPath).LocalPath;
             return strProjectPath;
         }
