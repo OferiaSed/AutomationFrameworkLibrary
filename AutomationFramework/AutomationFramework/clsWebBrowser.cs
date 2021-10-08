@@ -39,6 +39,7 @@ namespace AutomationFramework
                     break;
                 case "EDGE":
                     var strDriverPath = fnGetProjectPath() + @"lib\";
+                    clsReportResult.fnLog("Test", $"Edge Driver full path: {strDriverPath}", "Info", false);
                     var optionsEdge = new EdgeOptions();
                     optionsEdge.AddAdditionalCapability("UseChromium", true);
                     objDriver = new EdgeDriver(EdgeDriverService.CreateDefaultService(strDriverPath), optionsEdge, TimeSpan.FromMinutes(3));
@@ -70,8 +71,26 @@ namespace AutomationFramework
         private string fnGetProjectPath()
         {
             var strPath = System.Reflection.Assembly.GetCallingAssembly().CodeBase;
-            var strActualPath = strPath.Substring(0, strPath.LastIndexOf("bin"));
-            var strProjectPath = new Uri(strActualPath).LocalPath;
+            var strActualPath = "";
+            var strProjectPath = "";
+            if (!strPath.ToUpper().Contains("AGENT"))
+            {
+                clsReportResult.fnLog("Test", $"strPath Driver full path: {strPath}", "Info", false);
+                strActualPath = strPath.Substring(0, strPath.LastIndexOf("bin"));
+                clsReportResult.fnLog("Test", $"strActualPath Driver full path: {strActualPath}", "Info", false);
+                strProjectPath = new Uri(strActualPath).LocalPath;
+                clsReportResult.fnLog("Test", $"strProjectPath Driver full path: {strProjectPath}", "Info", false);
+            }
+            else 
+            {
+                var TempPath = new Uri(strPath).LocalPath;
+                clsReportResult.fnLog("Test", $"TempPath Driver path: {TempPath}", "Info", false);
+                var arrArr = TempPath.Split('\\');
+                var NewPath = new Uri($"{arrArr[0]}\\{arrArr[1]}\\{arrArr[2]}\\").LocalPath;
+                clsReportResult.fnLog("Test", $"NewPath Driver  path: {NewPath}", "Info", false);
+                strProjectPath = NewPath;
+            }
+
             return strProjectPath;
         }
     }
