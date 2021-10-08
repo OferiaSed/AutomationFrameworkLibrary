@@ -68,6 +68,8 @@ namespace AutomationFramework
 
         private string fnGetProjectPath()
         {
+            var strProjectPath = new Uri(clsVariables.strEdgeDriverPath).LocalPath;
+            /*
             var strPath = System.Reflection.Assembly.GetCallingAssembly().CodeBase;
             var strActualPath = "";
             var strProjectPath = "";
@@ -85,6 +87,7 @@ namespace AutomationFramework
                 //var NewPath = new Uri($"{arrArr[0]}\\{arrArr[1]}\\{arrArr[2]}\\").LocalPath;
                 strProjectPath = new Uri(clsVariables.strEdgeDriverPath).LocalPath;
             }
+            */
             return strProjectPath;
         }
     }
