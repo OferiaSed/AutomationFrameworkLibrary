@@ -1,7 +1,6 @@
 ﻿
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
-using OpenQA.Selenium.Edge;
 using OpenQA.Selenium.Support.UI;
 using System;
 using System.Collections.Generic;
@@ -38,11 +37,10 @@ namespace AutomationFramework
                     clsReportResult.fnLog("OpenBrowserPass", "Browser is openned correctly", "Pass", pblScreenShot);
                     break;
                 case "EDGE":
-                    var strDriverPath = fnGetProjectPath() + @"lib\";
-                    clsReportResult.fnLog("Test", $"Edge Driver full path: {strDriverPath}", "Info", false);
-                    var optionsEdge = new EdgeOptions();
+                    //var strDriverPath = fnGetProjectPath() + @"lib\";
+                    var optionsEdge = new OpenQA.Selenium.Edge.EdgeOptions();
                     optionsEdge.AddAdditionalCapability("UseChromium", true);
-                    objDriver = new EdgeDriver(EdgeDriverService.CreateDefaultService(strDriverPath), optionsEdge, TimeSpan.FromMinutes(3));
+                    objDriver = new OpenQA.Selenium.Edge.EdgeDriver(OpenQA.Selenium.Edge.EdgeDriverService.CreateDefaultService(), optionsEdge, TimeSpan.FromMinutes(3));
                     objDriver.Manage().Timeouts().PageLoad.Add(System.TimeSpan.FromSeconds(10));
                     wait = new WebDriverWait(objDriver, TimeSpan.FromSeconds(10));
                     objDriver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
@@ -75,22 +73,16 @@ namespace AutomationFramework
             var strProjectPath = "";
             if (!strPath.ToUpper().Contains("AGENT"))
             {
-                clsReportResult.fnLog("Test", $"strPath Driver full path: {strPath}", "Info", false);
                 strActualPath = strPath.Substring(0, strPath.LastIndexOf("bin"));
-                clsReportResult.fnLog("Test", $"strActualPath Driver full path: {strActualPath}", "Info", false);
                 strProjectPath = new Uri(strActualPath).LocalPath;
-                clsReportResult.fnLog("Test", $"strProjectPath Driver full path: {strProjectPath}", "Info", false);
             }
             else 
             {
                 var TempPath = new Uri(strPath).LocalPath;
-                clsReportResult.fnLog("Test", $"TempPath Driver path: {TempPath}", "Info", false);
                 var arrArr = TempPath.Split('\\');
                 var NewPath = new Uri($"{arrArr[0]}\\{arrArr[1]}\\{arrArr[2]}\\").LocalPath;
-                clsReportResult.fnLog("Test", $"NewPath Driver  path: {NewPath}", "Info", false);
                 strProjectPath = NewPath;
             }
-
             return strProjectPath;
         }
     }
