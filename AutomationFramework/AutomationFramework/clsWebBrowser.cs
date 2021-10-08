@@ -37,10 +37,10 @@ namespace AutomationFramework
                     clsReportResult.fnLog("OpenBrowserPass", "Browser is openned correctly", "Pass", pblScreenShot);
                     break;
                 case "EDGE":
-                    //var strDriverPath = fnGetProjectPath() + @"lib\";
+                    var strDriverPath = fnGetProjectPath();
                     var optionsEdge = new OpenQA.Selenium.Edge.EdgeOptions();
                     optionsEdge.AddAdditionalCapability("UseChromium", true);
-                    objDriver = new OpenQA.Selenium.Edge.EdgeDriver(OpenQA.Selenium.Edge.EdgeDriverService.CreateDefaultService(), optionsEdge, TimeSpan.FromMinutes(3));
+                    objDriver = new OpenQA.Selenium.Edge.EdgeDriver(OpenQA.Selenium.Edge.EdgeDriverService.CreateDefaultService(strDriverPath), optionsEdge, TimeSpan.FromMinutes(3));
                     objDriver.Manage().Timeouts().PageLoad.Add(System.TimeSpan.FromSeconds(10));
                     wait = new WebDriverWait(objDriver, TimeSpan.FromSeconds(10));
                     objDriver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
@@ -78,10 +78,12 @@ namespace AutomationFramework
             }
             else 
             {
-                var TempPath = new Uri(strPath).LocalPath;
-                var arrArr = TempPath.Split('\\');
-                var NewPath = new Uri($"{arrArr[0]}\\{arrArr[1]}\\{arrArr[2]}\\").LocalPath;
-                strProjectPath = NewPath;
+
+                //var TempPath = new Uri(strPath).LocalPath;
+                //var TempPath = new Uri(strPath).LocalPath;
+                //var arrArr = TempPath.Split('\\');
+                //var NewPath = new Uri($"{arrArr[0]}\\{arrArr[1]}\\{arrArr[2]}\\").LocalPath;
+                strProjectPath = new Uri(clsVariables.strEdgeDriverPath).LocalPath;
             }
             return strProjectPath;
         }
