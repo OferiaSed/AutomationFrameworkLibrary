@@ -18,7 +18,6 @@ namespace AutomationFramework
         public static ExtentV3HtmlReporter objHtmlReporter;
         public static bool TC_Status;
 
-
         public static bool fnExtentSetup()
         {
             bool blSuccess;
@@ -68,6 +67,9 @@ namespace AutomationFramework
                     case TestStatus.Passed:
                         objLogstatus = Status.Pass;
                         break;
+                    case TestStatus.Inconclusive:
+                        objLogstatus = Status.Pass;
+                        break;
                     default:
                         objLogstatus = Status.Warning;
                         Console.WriteLine("The status: " + objLogstatus + " is not supported.");
@@ -78,8 +80,10 @@ namespace AutomationFramework
             {
                 throw (pobjException);
             }
+
         }
 
+        [Obsolete("New function replace pstrStatus parameter to receive Status.[your status]")]
         public static void fnLog(string pstrStepName, string pstrDescription, string pstrStatus, bool pblScreenShot, bool pblHardStop = false, string pstrHardStopMsg = "")
         {
             if (pblScreenShot)
@@ -99,6 +103,9 @@ namespace AutomationFramework
                     case "INFO":
                         objTest.Log(Status.Info, pstrDescription, MediaEntityBuilder.CreateScreenCaptureFromPath(strSCLocation).Build());
                         break;
+                    case "WARNING":
+                        objTest.Log(Status.Warning, pstrDescription, MediaEntityBuilder.CreateScreenCaptureFromPath(strSCLocation).Build());
+                        break;
                 }
             }
             else
@@ -111,12 +118,38 @@ namespace AutomationFramework
                     case "FAIL":
                         TC_Status = false;
                         objTest.Log(Status.Fail, pstrDescription);
+                        if (pblHardStop) { Assert.Fail(pstrHardStopMsg); }
                         break;
                     case "INFO":
                         objTest.Log(Status.Info, pstrDescription);
                         break;
+                    case "WARNING":
+                        objTest.Log(Status.Info, pstrDescription);
+                        break;
                 }
             }
+        }
+
+        public static void fnLog(string pstrStepName, string pstrDescription, Status pstrStatus, bool pblScreenShot, bool pblHardStop = false, string pstrHardStopMsg = "")
+        {
+            MediaEntityModelProvider ss = null;
+            if (pblScreenShot)
+            {
+                string strSCLocation = fnGetScreenshot();
+                ss = MediaEntityBuilder.CreateScreenCaptureFromPath(strSCLocation).Build();
+            }
+
+            if (pstrStatus == Status.Fail)
+            {
+                TC_Status = false;
+                if (pblHardStop) {
+                    pstrHardStopMsg = $"Hardstop defined: {pstrHardStopMsg}";
+                    objTest.Log(pstrStatus, pstrHardStopMsg, ss);
+                    throw new Exception(pstrHardStopMsg);
+                }
+            }
+
+            objTest.Log(pstrStatus, pstrDescription, ss);
         }
 
         public static string fnGetScreenshot()
@@ -132,5 +165,10 @@ namespace AutomationFramework
 
             return strFileLocation;
         }
+
+
+
+
+
     }
 }
