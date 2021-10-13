@@ -62,6 +62,7 @@ namespace AutomationFramework
                 {
                     case TestStatus.Failed:
                         objLogstatus = Status.Fail;
+                        TestContext.Progress.WriteLine($"Test ended with {objLogstatus} – {objErrorMessage}");
                         objTest.Log(objLogstatus, "Test ended with " + objLogstatus + " – " + objErrorMessage);
                         break;
                     case TestStatus.Passed:
@@ -72,6 +73,7 @@ namespace AutomationFramework
                         break;
                     default:
                         objLogstatus = Status.Warning;
+                        TestContext.Progress.WriteLine($"The status: {objLogstatus} is not supported.");
                         Console.WriteLine("The status: " + objLogstatus + " is not supported.");
                         break;
                 }
@@ -92,18 +94,22 @@ namespace AutomationFramework
                 switch (pstrStatus.ToUpper())
                 {
                     case "PASS":
+                        TestContext.Progress.WriteLine($"{pstrDescription} - Pass");
                         objTest.Log(Status.Pass, pstrDescription, MediaEntityBuilder.CreateScreenCaptureFromPath(strSCLocation).Build());
                         break;
                     case "FAIL":
                         TC_Status = false;
+                        TestContext.Progress.WriteLine($"{pstrDescription} - Fail");
                         objTest.Log(Status.Fail, pstrDescription, MediaEntityBuilder.CreateScreenCaptureFromPath(strSCLocation).Build());
                         if (pblHardStop)
                             Assert.Fail(pstrHardStopMsg);
                         break;
                     case "INFO":
+                        TestContext.Progress.WriteLine($"{pstrDescription} - Info");
                         objTest.Log(Status.Info, pstrDescription, MediaEntityBuilder.CreateScreenCaptureFromPath(strSCLocation).Build());
                         break;
                     case "WARNING":
+                        TestContext.Progress.WriteLine($"{pstrDescription} - Warning");
                         objTest.Log(Status.Warning, pstrDescription, MediaEntityBuilder.CreateScreenCaptureFromPath(strSCLocation).Build());
                         break;
                 }
@@ -113,17 +119,21 @@ namespace AutomationFramework
                 switch (pstrStatus.ToUpper())
                 {
                     case "PASS":
+                        TestContext.Progress.WriteLine($"{pstrDescription} - Pass");
                         objTest.Log(Status.Pass, pstrDescription);
                         break;
                     case "FAIL":
                         TC_Status = false;
+                        TestContext.Progress.WriteLine($"{pstrDescription} - Fail");
                         objTest.Log(Status.Fail, pstrDescription);
                         if (pblHardStop) { Assert.Fail(pstrHardStopMsg); }
                         break;
                     case "INFO":
+                        TestContext.Progress.WriteLine($"{pstrDescription} - Info");
                         objTest.Log(Status.Info, pstrDescription);
                         break;
                     case "WARNING":
+                        TestContext.Progress.WriteLine($"{pstrDescription} - Warning");
                         objTest.Log(Status.Info, pstrDescription);
                         break;
                 }
@@ -144,11 +154,29 @@ namespace AutomationFramework
                 TC_Status = false;
                 if (pblHardStop) {
                     pstrHardStopMsg = $"Hardstop defined: {pstrHardStopMsg}";
+                    TestContext.Progress.WriteLine($"{pstrHardStopMsg} - HardStop Fail");
                     objTest.Log(pstrStatus, pstrHardStopMsg, ss);
                     throw new Exception(pstrHardStopMsg);
                 }
             }
 
+            var pstrStatusMessage = "";
+            switch (pstrStatus) 
+            {
+                case Status.Pass:
+                    pstrStatusMessage = "Pass"; 
+                    break;
+                case Status.Fail:
+                    pstrStatusMessage = "Fail";
+                    break;
+                case Status.Info:
+                    pstrStatusMessage = "Info";
+                    break;
+                case Status.Warning:
+                    pstrStatusMessage = "Warning";
+                    break;
+            }
+            TestContext.Progress.WriteLine($"{pstrDescription} - {pstrStatusMessage}");
             objTest.Log(pstrStatus, pstrDescription, ss);
         }
 

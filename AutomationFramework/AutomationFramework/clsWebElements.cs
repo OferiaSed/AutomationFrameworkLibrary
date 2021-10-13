@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using AventStack.ExtentReports;
+using NUnit.Framework;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Interactions;
 using OpenQA.Selenium.Support.Extensions;
@@ -96,19 +97,22 @@ namespace AutomationFramework
             bool blResult = false;
             try
             {
-                clsReportResult.fnLog("PageLoad", "Step - PageLoad in Page: " + pstrPage, "Info", false);
+                //TestContext.Progress.WriteLine($"Step - PageLoad in Page: {pstrPage} - Info");
+                clsReportResult.fnLog("PageLoad", "Step - PageLoad in Page: " + pstrPage, Status.Info, false);
 
                 strAction = "Displayed";
                 IJavaScriptExecutor objJS = (IJavaScriptExecutor)clsWebBrowser.objDriver;
                 clsWebBrowser.wait.Until(wd => objJS.ExecuteScript("return document.readyState").ToString() == "complete");
 
                 fnGetFluentWait(pobjWebElement, strAction);
-                clsReportResult.fnLog("PageLoadPass", "The Page is loaded for the Page: " + pstrPage, "Pass", pblScreenShot);
+                //TestContext.Progress.WriteLine($"The Page is loaded for the Page: {pstrPage} - Pass");
+                clsReportResult.fnLog("PageLoadPass", "The Page is loaded for the Page: " + pstrPage, Status.Pass, pblScreenShot);
                 blResult = true;
             }
             catch (Exception pobjException)
             {
-                clsReportResult.fnLog("PageLoadFail", "The Page is not loaded for the Page: " + pstrPage, "Fail", true, pblHardStop, pstrHardStopMsg);
+                //TestContext.Progress.WriteLine($"The Page is not loaded for the Page: : {pstrPage} - Fail");
+                clsReportResult.fnLog("PageLoadFail", "The Page is not loaded for the Page: " + pstrPage, Status.Fail, true, pblHardStop, pstrHardStopMsg);
                 fnExceptionHandling(pobjException);
             }
             return blResult;
@@ -122,15 +126,18 @@ namespace AutomationFramework
 
             try
             {
-                clsReportResult.fnLog("SendKeys", "Step - Sendkeys: " + pstrTextEnter + " to field: " + pstrField, "Info", false);
+                //TestContext.Progress.WriteLine($"Step - Sendkeys: {pstrTextEnter} to field: {pstrField} - Info");
+                clsReportResult.fnLog("SendKeys", "Step - Sendkeys: " + pstrTextEnter + " to field: " + pstrField, Status.Info, false);
                 strAction = "SendKeys";
                 fnGetFluentWait(pobjWebElement, strAction, pstrTextEnter);
-                clsReportResult.fnLog("SendKeysPass", "The SendKeys for: " + pstrField + " with value: " + pstrTextEnter + " was done successfully.", "Pass", pblScreenShot, pblHardStop);
+                //TestContext.Progress.WriteLine($"The Sendkeys for: {pstrField} with value {pstrTextEnter} was done successfully - Pass");
+                clsReportResult.fnLog("SendKeysPass", "The SendKeys for: " + pstrField + " with value: " + pstrTextEnter + " was done successfully.", Status.Pass, pblScreenShot, pblHardStop);
                 blResult = true;
             }
             catch (Exception pobjException)
             {
-                clsReportResult.fnLog("SendKeysFail", "The SendKeys for: " + pstrField + " with value: " + pstrTextEnter + " has failed.", "Fail", true, pblHardStop, pstrHardStopMsg);
+                //TestContext.Progress.WriteLine($"The Sendkeys for: {pstrField} with value {pstrTextEnter} has failed - Fail");
+                clsReportResult.fnLog("SendKeysFail", "The SendKeys for: " + pstrField + " with value: " + pstrTextEnter + " has failed.", Status.Fail, true, pblHardStop, pstrHardStopMsg);
                 fnExceptionHandling(pobjException);
             }
             return blResult;
@@ -141,18 +148,19 @@ namespace AutomationFramework
             bool blResult = false;
             try
             {
-                clsReportResult.fnLog("Click", "Step - Click on " + pstrElement, "Info", false);
+                //TestContext.Progress.WriteLine($"Step - Click on: {pstrElement} - Info");
+                clsReportResult.fnLog("Click", "Step - Click on " + pstrElement, Status.Info, false);
 
                 strAction = "Click";
                 fnGetFluentWait(pobjWebElement, strAction);
-                //clsReportResult.fnLog("ClickPass", "The click to the element is correctly for: " + pstrElement, "Pass", pblScreenShot);
-                clsReportResult.fnLog("ClickPass", "Click on " + pstrElement + " was done successfully.", "Pass", pblScreenShot);
+                //TestContext.Progress.WriteLine($"The click to the element is not working for: {pstrElement} - Pass");
+                clsReportResult.fnLog("ClickPass", "Click on " + pstrElement + " was done successfully.", Status.Pass, pblScreenShot);
                 blResult = true;
             }
             catch (Exception pobjException)
             {
-                //clsReportResult.fnLog("ClickFail", "The click to the element is not working for: " + pstrElement, "Fail", true, pblHardStop, pstrHardStopMsg);
-                clsReportResult.fnLog("ClickFail", "Click on " + pstrElement + " was done successfully.", "Fail", true, pblHardStop, pstrHardStopMsg);
+                //TestContext.Progress.WriteLine($"The click to the element is not working for: {pstrElement} - Fail");
+                clsReportResult.fnLog("ClickFail", "The click to the element is not working for: " + pstrElement, Status.Fail, true, pblHardStop, pstrHardStopMsg);
                 fnExceptionHandling(pobjException);
             }
             return blResult;
@@ -163,21 +171,21 @@ namespace AutomationFramework
             bool blResult = false;
             try
             {
-                //clsReportResult.fnLog("DoubleClick", "Step - Double Clic on " + pstrElement, "Info", false);
+                //TestContext.Progress.WriteLine($"Step - Double Clic on {pstrElement} - Info");
+                clsReportResult.fnLog("DoubleClick", "Step - Double Clic on " + pstrElement, Status.Info, false);
 
                 strAction = "Displayed";
                 fnGetFluentWait(pobjWebElement, strAction);
                 Actions actions = new Actions(clsWebBrowser.objDriver);
                 actions.DoubleClick(pobjWebElement).Perform();
-                //clsReportResult.fnLog("DoubleClickPass", "The Double click to the element is correctly for: " + pstrElement, "Pass", pblScreenShot);
-                clsReportResult.fnLog("DoubleClickPass", "Double Click on " + pstrElement + " was done successfully.", "Pass", pblScreenShot);
+                //TestContext.Progress.WriteLine($"Double Click on {pstrElement} was done successfully - Pass");
+                clsReportResult.fnLog("DoubleClickPass", "Double Click on " + pstrElement + " was done successfully.", Status.Pass, pblScreenShot);
                 blResult = true;
             }
             catch (Exception pobjException)
             {
-                //clsReportResult.fnLog("DoubleClickFail", "The Double click to the element is not working for: " + pstrElement, "Fail", true, pblHardStop, pstrHardStopMsg);
-                clsReportResult.fnLog("DoubleClickPass", "Double Click on " + pstrElement, "Info", false);
-                clsReportResult.fnLog("DoubleClickPass", "Couldn't Double Click on " + pstrElement, "Fail", true, pblHardStop, pstrHardStopMsg);
+                //TestContext.Progress.WriteLine($"Couldn't Double Click on {pstrElement} - Fail");
+                clsReportResult.fnLog("DoubleClickPass", "Couldn't Double Click on " + pstrElement, Status.Fail, true, pblHardStop, pstrHardStopMsg);
                 fnExceptionHandling(pobjException);
             }
             return blResult;
@@ -189,18 +197,18 @@ namespace AutomationFramework
             string strAttributeContent = "";
             try
             {
-                clsReportResult.fnLog("GetAttribute", "Step - Get Attribue " + pstrAttName + " from " + pstrElement, "Info", false);
+                //TestContext.Progress.WriteLine($"Step - Get Attribue {pstrAttName} from {pstrElement} - Info");
+                clsReportResult.fnLog("GetAttribute", "Step - Get Attribue " + pstrAttName + " from " + pstrElement, Status.Info, false);
 
                 strAttributeContent = pobjWebElement.GetAttribute(pstrAttName);
-                //clsReportResult.fnLog("GetAttributePass", "The Attribute " + pstrAttName + " from the WebElement: " + pstrElement + "  is captured successfully", "Pass", pblScreenShot);
-                clsReportResult.fnLog("GetAttributePass", "Get Attribute " + pstrAttName + " from Element: " + pstrElement + "  was done successfully.", "Pass", pblScreenShot);
+                //TestContext.Progress.WriteLine($"Get Attribute {pstrAttName} from Element: {pstrElement} was done successfully - Pass");
+                clsReportResult.fnLog("GetAttributePass", "Get Attribute " + pstrAttName + " from Element: " + pstrElement + "  was done successfully.", Status.Pass, pblScreenShot);
 
             }
             catch (Exception pobjException)
             {
-                //clsReportResult.fnLog("GetAttributeFail", "The Attribute " + pstrAttName + " from the WebElement: " + pstrElement + "  is not captured successfully", "Fail", pblScreenShot, pblHardStop, pstrHardStopMsg);
-                clsReportResult.fnLog("GetAttributeFail", "Get Attribute " + pstrAttName + " from Element: " + pstrElement + ".", "Info", false);
-                //clsReportResult.fnLog("GetAttributeFail", "Couldn't Capture Get Attribute " + pstrAttName + " from Element: " + pstrElement + ".", "Fail", pblScreenShot, pblHardStop, pstrHardStopMsg);
+                //TestContext.Progress.WriteLine($"Get Attribute {pstrAttName} from Element: {pstrElement} was not done. - Fail");
+                clsReportResult.fnLog("GetAttributeFail", "Get Attribute " + pstrAttName + " from Element: " + pstrElement + " was not done.", Status.Fail, false);
                 fnExceptionHandling(pobjException);
             }
             return strAttributeContent;
@@ -211,7 +219,8 @@ namespace AutomationFramework
             bool blResult = false;
             try
             {
-                //clsReportResult.fnLog("Clear", "Step - Clear to field: " + pstrField, "Info", false);
+                //TestContext.Progress.WriteLine($"Step - Clear to field: {pstrField} - Info");
+                clsReportResult.fnLog("Clear", "Step - Clear to field: " + pstrField, Status.Info, false);
 
                 strAction = "Clear";
                 fnGetFluentWait(pobjWebElement, strAction);
@@ -219,8 +228,8 @@ namespace AutomationFramework
                 string testTXT = pobjWebElement.Text;
                 if (pobjWebElement.Text.Equals("") || pobjWebElement.Text.Equals(null))
                 {
-                    //clsReportResult.fnLog("ClearPass", "The text is cleared for the field: " + pstrField, "Pass", pblScreenShot);
-                    clsReportResult.fnLog("ClearPass", "Clear to field" + pstrField + " was done successfully.", "Pass", pblScreenShot);
+                    //TestContext.Progress.WriteLine($"Clear to field {pstrField} was done successfully. - Pass");
+                    clsReportResult.fnLog("ClearPass", "Clear to field" + pstrField + " was done successfully.", Status.Pass, pblScreenShot);
                     blResult = true;
                 }
                 else
@@ -238,11 +247,13 @@ namespace AutomationFramework
             bool blResult = false;
             try
             {
-                clsReportResult.fnLog("Contains", "Step - Contains: " + pstrSubString + " in the string: " + pstrParentString, "Info", false);
+                //TestContext.Progress.WriteLine($"Step - Contains: {pstrSubString} in the string: {pstrParentString} - Info");
+                clsReportResult.fnLog("Contains", "Step - Contains: " + pstrSubString + " in the string: " + pstrParentString, Status.Info, false);
 
                 if (pstrParentString.Contains(pstrSubString))
                 {
-                    clsReportResult.fnLog("ContainsTextPass", pstrStepName, "Pass", pblScreenShot);
+                    //TestContext.Progress.WriteLine($"Contains: {pstrStepName} - Pass");
+                    clsReportResult.fnLog("ContainsTextPass", pstrStepName, Status.Pass, pblScreenShot);
                     blResult = true;
                 }
                 else
@@ -264,7 +275,8 @@ namespace AutomationFramework
 
                 if (blElementExist)
                 {
-                    clsReportResult.fnLog("ElementExistPass", "Element " + pstrStepName + " exist in the page", "Pass", pblScreenShot);
+                    //TestContext.Progress.WriteLine($"The element {pstrStepName} exist in the page - Pass");
+                    clsReportResult.fnLog("ElementExistPass", "The element " + pstrStepName + " exist in the page", Status.Pass, pblScreenShot);
                     blResult = true;
                 }
                 else
@@ -287,7 +299,8 @@ namespace AutomationFramework
 
                 if (!blElementExist)
                 {
-                    clsReportResult.fnLog("ElementNotExistPass", "Element " + pstrStepName + " not exist in the page", "Pass", pblScreenShot);
+                    //TestContext.Progress.WriteLine($"The element {pstrStepName} not exist in the page - Pass");
+                    clsReportResult.fnLog("ElementNotExistPass", "Element " + pstrStepName + " not exist in the page", Status.Pass, pblScreenShot);
                     blResult = true;
                 }
                 else
@@ -331,11 +344,13 @@ namespace AutomationFramework
             bool blResult = false;
             try
             {
-                clsReportResult.fnLog("VerifyText", "Step - Verify Text, Expected: " + pstrExpectedString + ", Actual: " + pstrActualString, "Info", false);
+                //TestContext.Progress.WriteLine($"Step - Verify Text, Expected: {pstrExpectedString}, Actual: {pstrActualString} - Info");
+                clsReportResult.fnLog("VerifyText", "Step - Verify Text, Expected: " + pstrExpectedString + ", Actual: " + pstrActualString, Status.Info, false);
 
                 if (pstrExpectedString.Equals(pstrActualString))
                 {
-                    clsReportResult.fnLog("VerifyTextPass", pstrStepName, "Pass", pblScreenShot);
+                    //TestContext.Progress.WriteLine($"{pstrStepName} - Pass");
+                    clsReportResult.fnLog("VerifyTextPass", pstrStepName, Status.Pass, pblScreenShot);
                     blResult = true;
                 }
                 else
@@ -353,7 +368,8 @@ namespace AutomationFramework
             bool blResult = false;
             try
             {
-                clsReportResult.fnLog("SelectDropdown", "Step - Select Dropdown: " + pstrStepName + " With Value: " + pstrValue, "Info", false);
+                //TestContext.Progress.WriteLine($"Step - Select Dropdown: {pstrStepName} With Value: {pstrValue} - Info");
+                clsReportResult.fnLog("SelectDropdown", "Step - Select Dropdown: " + pstrStepName + " With Value: " + pstrValue, Status.Info, false);
 
                 var selectElement = new SelectElement(pobjWebElement);
                 switch (pstrValueType.ToUpper())
@@ -368,13 +384,15 @@ namespace AutomationFramework
                         selectElement.SelectByIndex(Int32.Parse(pstrValue));
                         break;
                 }
-                clsReportResult.fnLog("SelectListPass", pstrStepName, "Pass", pblScreenShot);
+                //TestContext.Progress.WriteLine($"{pstrStepName} - Pass");
+                clsReportResult.fnLog("SelectListPass", pstrStepName, Status.Pass, pblScreenShot);
                 blResult = true;
 
             }
             catch (Exception pobjException)
             {
-                clsReportResult.fnLog("SelectListFail", pstrStepName, "Fail", true, pblHardStop, pstrHardStopMsg);
+                //TestContext.Progress.WriteLine($"{pstrStepName} - Fail");
+                clsReportResult.fnLog("SelectListFail", pstrStepName, Status.Fail, true, pblHardStop, pstrHardStopMsg);
                 fnExceptionHandling(pobjException);
             }
             return blResult;
@@ -385,11 +403,13 @@ namespace AutomationFramework
             bool blResult = false;
             try
             {
-                clsReportResult.fnLog("VerifySelectedDropdown", "Step - Selected Dropdown: " + pstrStepName + " With Value: " + pstrValue, "Info", false);
+                //TestContext.Progress.WriteLine($"Step - Selected Dropdown: {pstrStepName} With Value: {pstrValue} - Info");
+                clsReportResult.fnLog("VerifySelectedDropdown", "Step - Selected Dropdown: " + pstrStepName + " With Value: " + pstrValue, Status.Info, false);
                 string pstrSelectItem = new SelectElement(pobjWebElement).SelectedOption.GetAttribute("value");
                 if (pstrValue == pstrSelectItem)
                 {
-                    clsReportResult.fnLog("SelectedItemPass", pstrStepName, "Pass", pblScreenShot);
+                    //TestContext.Progress.WriteLine($"{pstrStepName} - Pass");
+                    clsReportResult.fnLog("SelectedItemPass", pstrStepName, Status.Pass, pblScreenShot);
                     blResult = true;
                 }
                 else
@@ -407,16 +427,19 @@ namespace AutomationFramework
             bool blResult = false;
             try
             {
-                clsReportResult.fnLog("SelectCheckBox", "Step - " + pstrStepName, "Info", false);
+                //TestContext.Progress.WriteLine($"Step - {pstrStepName} - Info");
+                clsReportResult.fnLog("SelectCheckBox", "Step - " + pstrStepName, Status.Info, false);
                 strAction = "Click";
                 fnGetFluentWait(pobjWebElement, strAction);
                 Thread.Sleep(5000);
-                clsReportResult.fnLog("SelectCheckBoxPass", pstrStepName, "Pass", pblScreenShot);
+                //TestContext.Progress.WriteLine($"{pstrStepName} - Pass");
+                clsReportResult.fnLog("SelectCheckBoxPass", pstrStepName, Status.Pass, pblScreenShot);
                 blResult = true;
             }
             catch (Exception pobjException)
             {
-                clsReportResult.fnLog("SelectCheckBoxFail", pstrStepName, "Fail", true, pblHardStop, pstrHardStopMsg);
+                //TestContext.Progress.WriteLine($"{pstrStepName} - Fail");
+                clsReportResult.fnLog("SelectCheckBoxFail", pstrStepName, Status.Fail, true, pblHardStop, pstrHardStopMsg);
                 fnExceptionHandling(pobjException);
             }
             return blResult;
@@ -428,14 +451,16 @@ namespace AutomationFramework
             bool blResult = false;
             try
             {
-                clsReportResult.fnLog("SelectRadioBtn", "Step - " + pstrStepName, "Info", false);
+                //TestContext.Progress.WriteLine($"Step - {pstrStepName} - Info");
+                clsReportResult.fnLog("SelectRadioBtn", "Step - " + pstrStepName, Status.Info, false);
                 strAction = "Click";
                 fnGetFluentWait(pobjWebElement, strAction);
                 Thread.Sleep(5000);
 
                 if (pobjWebElement.Selected)
                 {
-                    clsReportResult.fnLog("SelectRadioBtnPass", pstrStepName, "Pass", pblScreenShot);
+                    //TestContext.Progress.WriteLine($"{pstrStepName} - Pass");
+                    clsReportResult.fnLog("SelectRadioBtnPass", pstrStepName, Status.Pass, pblScreenShot);
                     blResult = true;
                 }
                 else
@@ -455,8 +480,8 @@ namespace AutomationFramework
             try
             {
                 bool blElementsFound = true;
-
-                clsReportResult.fnLog("VerifyList", "Step - " + pstrStepName, "Info", false);
+                //TestContext.Progress.WriteLine($"Step - {pstrStepName} - Info");
+                clsReportResult.fnLog("VerifyList", "Step - " + pstrStepName, Status.Info, false);
                 IList<IWebElement> objListWE = pobjWebElement.FindElements(By.TagName(pstrListType));
 
                 for (int i = 0; i < pstrListValues.Count(); i++)
@@ -471,17 +496,22 @@ namespace AutomationFramework
                     }
 
                     if (blElementFound)
-                        clsReportResult.fnLog("VerifyListItems", "Element from the List: " + pstrListValues[i] + " is Displayed", "Info", false);
+                    {
+                        //TestContext.Progress.WriteLine($"Element from the List: {pstrListValues[i]} is Displayed - Info");
+                        clsReportResult.fnLog("VerifyListItems", "Element from the List: " + pstrListValues[i] + " is Displayed", Status.Info, false);
+                    }
                     else
                     {
-                        clsReportResult.fnLog("VerifyListItems", "Element from the List: " + pstrListValues[i] + " is not Displayed", "Info", false);
+                        //TestContext.Progress.WriteLine($"Element from the List: {pstrListValues[i]} is not Displayed - Info");
+                        clsReportResult.fnLog("VerifyListItems", "Element from the List: " + pstrListValues[i] + " is not Displayed", Status.Info, false);
                         blElementsFound = false;
                     }
                 }
 
                 if (blElementsFound)
                 {
-                    clsReportResult.fnLog("VerifyListPass", "All Elements from the List are Displayed", "Pass", pblScreenShot, pblHardStop);
+                    //TestContext.Progress.WriteLine($"All Elements from the List are Displayed - Pass");
+                    clsReportResult.fnLog("VerifyListPass", "All Elements from the List are Displayed", Status.Pass, pblScreenShot, pblHardStop);
                     blResult = true;
                 }
                 else
@@ -490,7 +520,8 @@ namespace AutomationFramework
             }
             catch (Exception pobjException)
             {
-                clsReportResult.fnLog("VerifyListPass", "Some Elements from the List are not Displayed", "Pass", pblScreenShot, pblHardStop);
+                //TestContext.Progress.WriteLine($"Some Elements from the List are not Displayed - Fail");
+                clsReportResult.fnLog("VerifyListPass", "Some Elements from the List are not Displayed", Status.Fail, pblScreenShot, pblHardStop);
                 fnExceptionHandling(pobjException, pstrStepName, pblHardStop, pstrHardStopMsg);
             }
 
@@ -500,40 +531,50 @@ namespace AutomationFramework
         public static void fnExceptionHandling(Exception pobjException, string pstrStepName = "", bool pblHardStop = false, string pstrHardStopMsg = "Failed Step and HardStop defined")
         {
             clsReportResult clsRR = new clsReportResult();
-
-            //string pstrExceptionName = pobjException.GetType().Name;
             switch (pobjException.Message.ToString())
             {
                 case "SendKeysFail":
-                    clsReportResult.fnLog("SendKeysFail", "SendKeys action Fail", "Fail", true, pblHardStop, pstrHardStopMsg);
+                    //TestContext.Progress.WriteLine("SendKeys action Fail");
+                    clsReportResult.fnLog("SendKeysFail", "SendKeys action Fail", Status.Fail, true, pblHardStop, pstrHardStopMsg);
                     break;
                 case "ClearFail":
-                    clsReportResult.fnLog("ClearFail", "Clear action Fail", "Fail", true, pblHardStop, pstrHardStopMsg);
+                    //TestContext.Progress.WriteLine("Clear action Fail");
+                    clsReportResult.fnLog("ClearFail", "Clear action Fail", Status.Fail, true, pblHardStop, pstrHardStopMsg);
                     break;
                 case "ElementExistFail":
-                    clsReportResult.fnLog("ElementExistFail", "Element exist verification failed", "Fail", true, pblHardStop, pstrHardStopMsg);
+                    //TestContext.Progress.WriteLine("Element exist verification failed");
+                    clsReportResult.fnLog("ElementExistFail", "Element exist verification failed", Status.Fail, true, pblHardStop, pstrHardStopMsg);
                     break;
                 case "ElementNotExistFail":
-                    clsReportResult.fnLog("ElementNotExistFail", "Element not exist verification failed", "Fail", true, pblHardStop, pstrHardStopMsg);
+                    //TestContext.Progress.WriteLine("Element not exist verification failed");
+                    clsReportResult.fnLog("ElementNotExistFail", "Element not exist verification failed", Status.Fail, true, pblHardStop, pstrHardStopMsg);
                     break;
                 case "ContainsTextFail":
-                    clsReportResult.fnLog("ContainsTextFail", "Contains text verification failed", "Fail", true, pblHardStop, pstrHardStopMsg);
+                    //TestContext.Progress.WriteLine("Contains text verification failed");
+                    clsReportResult.fnLog("ContainsTextFail", "Contains text verification failed", Status.Fail, true, pblHardStop, pstrHardStopMsg);
                     break;
                 case "VerifyTextFail":
-                    clsReportResult.fnLog("VerifyTextFail", "Verify text verification failed", "Fail", true, pblHardStop, pstrHardStopMsg);
+                    //TestContext.Progress.WriteLine("Verify text verification failed");
+                    clsReportResult.fnLog("VerifyTextFail", "Verify text verification failed", Status.Fail, true, pblHardStop, pstrHardStopMsg);
                     break;
                 case "VerifySelectedItemFail":
-                    clsReportResult.fnLog("SelectedItemFail", "Coverage selected verification failed", "Fail", true, pblHardStop, pstrHardStopMsg);
+                    //TestContext.Progress.WriteLine("Coverage selected verification failed");
+                    clsReportResult.fnLog("SelectedItemFail", "Coverage selected verification failed", Status.Fail, true, pblHardStop, pstrHardStopMsg);
                     break;
                 case "SelectRadioBtnFail":
-                    clsReportResult.fnLog("SelectRadioBtnFail", "Select Radio Button verification failed", "Fail", true, pblHardStop, pstrHardStopMsg);
+                    //TestContext.Progress.WriteLine("Select Radio Button verification failed");
+                    clsReportResult.fnLog("SelectRadioBtnFail", "Select Radio Button verification failed", Status.Fail, true, pblHardStop, pstrHardStopMsg);
                     break;
                 case "Timed out after 10 seconds":
-                    if (pobjException.InnerException.ToString().Contains("no such element: Unable to locate element"))
-                        clsReportResult.fnLog("NoSuchElement", "WebElement doesn't exist or is incorrect", "Info", false);
+                    if (pobjException.InnerException.ToString().Contains("no such element: Unable to locate element")) 
+                    {
+                        //TestContext.Progress.WriteLine("WebElement doesn't exist or is incorrect");
+                        clsReportResult.fnLog("NoSuchElement", "WebElement doesn't exist or is incorrect", Status.Info, false);
+                    }
                     break;
                 default:
-                    clsReportResult.fnLog("Exception", "Exception: " + pobjException.Message.ToString(), "Fail", true, pblHardStop, pstrHardStopMsg);
+                    //TestContext.Progress.WriteLine("Exception: " + pobjException.Message.ToString());
+                    clsReportResult.fnLog("Exception", "Exception: " + pobjException.Message.ToString(), Status.Fail, true, pblHardStop, pstrHardStopMsg);
                     Console.WriteLine("Exception: " + pobjException.GetType().Name);
                     break;
             }
@@ -542,17 +583,19 @@ namespace AutomationFramework
         public void fnScrollTo(IWebElement pobjWebElement, string pstrField, bool pblScreenShot = true, bool pblHardStop = false, string pstrHardStopMsg = "Scroll To Failed and HardStop defined")
         {
             clsReportResult clsRR = new clsReportResult();
-
             try
             {
-                clsReportResult.fnLog("ScrollTo", "Step - Scroll to element: " + pstrField, "Info", false);
+                //TestContext.Progress.WriteLine($"Step - Scroll to element: {pstrField} - Info");
+                clsReportResult.fnLog("ScrollTo", "Step - Scroll to element: " + pstrField, Status.Info, false);
                 clsWebBrowser.objDriver.ExecuteJavaScript("arguments[0].scrollIntoView(true);", pobjWebElement);
                 Thread.Sleep(TimeSpan.FromSeconds(2));
-                clsReportResult.fnLog("ScrollToPass", "Scrolled to element: " + pstrField, "Pass", pblScreenShot);
+                //TestContext.Progress.WriteLine($"Scrolled to element: {pstrField} - Pass");
+                clsReportResult.fnLog("ScrollToPass", "Scrolled to element: " + pstrField, Status.Pass, pblScreenShot);
             }
             catch (Exception pobjException)
             {
-                clsReportResult.fnLog("ScrollToFailed", "Failed Scroll to element: " + pstrField, "Fail", true, pblHardStop, pstrHardStopMsg);
+                //TestContext.Progress.WriteLine($"Failed Scroll to element: {pstrField} - Fail");
+                clsReportResult.fnLog("ScrollToFailed", "Failed Scroll to element: " + pstrField, Status.Fail, true, pblHardStop, pstrHardStopMsg);
                 fnExceptionHandling(pobjException);
             }
         }
