@@ -20,6 +20,20 @@ namespace AutomationFramework
         public static string strAction = "";
 
 
+        public IList<IWebElement> fnGetWeList(string pstrLocator)
+        {
+            try
+            {
+                IList<IWebElement> pobjElement = clsWebBrowser.objDriver.FindElements(By.XPath(pstrLocator));
+                return pobjElement;
+            }
+            catch (Exception pobjException)
+            {
+                fnExceptionHandling(pobjException, "Ilist<WebElement>: " + pstrLocator + " doesn't exist", true);
+                return null;
+            }
+        }
+
         public IWebElement fnGetWe(string pstrLocator)
         {
             try
@@ -126,17 +140,14 @@ namespace AutomationFramework
 
             try
             {
-                //TestContext.Progress.WriteLine($"Step - Sendkeys: {pstrTextEnter} to field: {pstrField} - Info");
                 clsReportResult.fnLog("SendKeys", "Step - Sendkeys: " + pstrTextEnter + " to field: " + pstrField, Status.Info, false);
                 strAction = "SendKeys";
                 fnGetFluentWait(pobjWebElement, strAction, pstrTextEnter);
-                //TestContext.Progress.WriteLine($"The Sendkeys for: {pstrField} with value {pstrTextEnter} was done successfully - Pass");
                 clsReportResult.fnLog("SendKeysPass", "The SendKeys for: " + pstrField + " with value: " + pstrTextEnter + " was done successfully.", Status.Pass, pblScreenShot, pblHardStop);
                 blResult = true;
             }
             catch (Exception pobjException)
             {
-                //TestContext.Progress.WriteLine($"The Sendkeys for: {pstrField} with value {pstrTextEnter} has failed - Fail");
                 clsReportResult.fnLog("SendKeysFail", "The SendKeys for: " + pstrField + " with value: " + pstrTextEnter + " has failed.", Status.Fail, true, pblHardStop, pstrHardStopMsg);
                 fnExceptionHandling(pobjException);
             }
@@ -524,58 +535,48 @@ namespace AutomationFramework
                 clsReportResult.fnLog("VerifyListPass", "Some Elements from the List are not Displayed", Status.Fail, pblScreenShot, pblHardStop);
                 fnExceptionHandling(pobjException, pstrStepName, pblHardStop, pstrHardStopMsg);
             }
-
             return blResult;
         }
 
-        public static void fnExceptionHandling(Exception pobjException, string pstrStepName = "", bool pblHardStop = false, string pstrHardStopMsg = "Failed Step and HardStop defined")
+        public virtual void fnExceptionHandling(Exception pobjException, string pstrStepName = "", bool pblHardStop = false, string pstrHardStopMsg = "Failed Step and HardStop defined")
         {
             clsReportResult clsRR = new clsReportResult();
             switch (pobjException.Message.ToString())
             {
                 case "SendKeysFail":
-                    //TestContext.Progress.WriteLine("SendKeys action Fail");
                     clsReportResult.fnLog("SendKeysFail", "SendKeys action Fail", Status.Fail, true, pblHardStop, pstrHardStopMsg);
                     break;
                 case "ClearFail":
-                    //TestContext.Progress.WriteLine("Clear action Fail");
                     clsReportResult.fnLog("ClearFail", "Clear action Fail", Status.Fail, true, pblHardStop, pstrHardStopMsg);
                     break;
                 case "ElementExistFail":
-                    //TestContext.Progress.WriteLine("Element exist verification failed");
                     clsReportResult.fnLog("ElementExistFail", "Element exist verification failed", Status.Fail, true, pblHardStop, pstrHardStopMsg);
                     break;
                 case "ElementNotExistFail":
-                    //TestContext.Progress.WriteLine("Element not exist verification failed");
                     clsReportResult.fnLog("ElementNotExistFail", "Element not exist verification failed", Status.Fail, true, pblHardStop, pstrHardStopMsg);
                     break;
                 case "ContainsTextFail":
-                    //TestContext.Progress.WriteLine("Contains text verification failed");
                     clsReportResult.fnLog("ContainsTextFail", "Contains text verification failed", Status.Fail, true, pblHardStop, pstrHardStopMsg);
                     break;
                 case "VerifyTextFail":
-                    //TestContext.Progress.WriteLine("Verify text verification failed");
                     clsReportResult.fnLog("VerifyTextFail", "Verify text verification failed", Status.Fail, true, pblHardStop, pstrHardStopMsg);
                     break;
                 case "VerifySelectedItemFail":
-                    //TestContext.Progress.WriteLine("Coverage selected verification failed");
                     clsReportResult.fnLog("SelectedItemFail", "Coverage selected verification failed", Status.Fail, true, pblHardStop, pstrHardStopMsg);
                     break;
                 case "SelectRadioBtnFail":
-                    //TestContext.Progress.WriteLine("Select Radio Button verification failed");
                     clsReportResult.fnLog("SelectRadioBtnFail", "Select Radio Button verification failed", Status.Fail, true, pblHardStop, pstrHardStopMsg);
                     break;
                 case "Timed out after 10 seconds":
                     if (pobjException.InnerException.ToString().Contains("no such element: Unable to locate element")) 
                     {
-                        //TestContext.Progress.WriteLine("WebElement doesn't exist or is incorrect");
                         clsReportResult.fnLog("NoSuchElement", "WebElement doesn't exist or is incorrect", Status.Info, false);
                     }
                     break;
                 default:
-                    //TestContext.Progress.WriteLine("Exception: " + pobjException.Message.ToString());
-                    clsReportResult.fnLog("Exception", "Exception: " + pobjException.Message.ToString(), Status.Fail, true, pblHardStop, pstrHardStopMsg);
-                    Console.WriteLine("Exception: " + pobjException.GetType().Name);
+                    clsReportResult.fnLog("Exception", $"{pstrStepName}, Exception => Message({pobjException.Message.ToString()}), Stack Trace({pobjException.StackTrace.ToString()})", Status.Fail, true, pblHardStop, pstrHardStopMsg);
+                    //clsReportResult.fnLog("Exception", $"Exception: Message({pobjException.Message.ToString()}), Stack Trace({pobjException.StackTrace.ToString()})", Status.Fail, true, pblHardStop, pstrHardStopMsg);
+                    //Console.WriteLine($"Exception: Message({pobjException.Message.ToString()}), Stack Trace({pobjException.StackTrace.ToString()})");
                     break;
             }
         }
