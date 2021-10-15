@@ -568,7 +568,7 @@ namespace AutomationFramework
                     clsReportResult.fnLog("SelectRadioBtnFail", "Select Radio Button verification failed", Status.Fail, true, pblHardStop, pstrHardStopMsg);
                     break;
                 case "Timed out after 10 seconds":
-                    if (pobjException.InnerException.ToString().Contains("no such element: Unable to locate element")) 
+                    if (pobjException.InnerException.ToString().Contains("no such element: Unable to locate element"))
                     {
                         clsReportResult.fnLog("NoSuchElement", "WebElement doesn't exist or is incorrect", Status.Info, false);
                     }
@@ -581,21 +581,64 @@ namespace AutomationFramework
             }
         }
 
+        /// <summary>
+        /// Created to scroll in pages as needed and make a specific element visible
+        /// </summary>
+        /// <param name="driver">The WebDriver</param>
+        /// <param name="element">The elelemt to scroll to</param>
+        public void fnScrollToV2(IWebElement pobjWebElement, string pstrField, bool pblScreenShot = true, bool pblHardStop = false, string pstrHardStopMsg = "Scroll To Failed and HardStop defined")
+        {
+            try
+            {
+                clsReportResult.fnLog("ScrollTo", "Step - Scroll to element: " + pstrField, Status.Info, false);
+                Thread.Sleep(TimeSpan.FromSeconds(2));
+                new Actions(clsWebBrowser.objDriver)
+                    .MoveToElement(pobjWebElement)
+                    .Build()
+                    .Perform();
+                clsReportResult.fnLog("ScrollToPass", "Scrolled to element: " + pstrField, Status.Pass, pblScreenShot);
+            }
+            catch (Exception pobjException)
+            {
+                clsReportResult.fnLog("ScrollToFailed", "Failed Scroll to element: " + pstrField, Status.Fail, true, pblHardStop, pstrHardStopMsg);
+                fnExceptionHandling(pobjException);
+            }
+        }
+
+        [Obsolete("Use fnScrollToV2() or fnJsScrollTo() instead")]
         public void fnScrollTo(IWebElement pobjWebElement, string pstrField, bool pblScreenShot = true, bool pblHardStop = false, string pstrHardStopMsg = "Scroll To Failed and HardStop defined")
         {
             clsReportResult clsRR = new clsReportResult();
             try
             {
-                //TestContext.Progress.WriteLine($"Step - Scroll to element: {pstrField} - Info");
                 clsReportResult.fnLog("ScrollTo", "Step - Scroll to element: " + pstrField, Status.Info, false);
                 clsWebBrowser.objDriver.ExecuteJavaScript("arguments[0].scrollIntoView(true);", pobjWebElement);
                 Thread.Sleep(TimeSpan.FromSeconds(2));
-                //TestContext.Progress.WriteLine($"Scrolled to element: {pstrField} - Pass");
                 clsReportResult.fnLog("ScrollToPass", "Scrolled to element: " + pstrField, Status.Pass, pblScreenShot);
             }
             catch (Exception pobjException)
             {
-                //TestContext.Progress.WriteLine($"Failed Scroll to element: {pstrField} - Fail");
+                clsReportResult.fnLog("ScrollToFailed", "Failed Scroll to element: " + pstrField, Status.Fail, true, pblHardStop, pstrHardStopMsg);
+                fnExceptionHandling(pobjException);
+            }
+        }
+
+        /// <summary>
+        /// Created to scroll in pages as needed and make a specific element visible, Javascript version
+        /// </summary>
+        /// <param name="driver">The WebDriver</param>
+        /// <param name="element">The elelemt to scroll to</param>
+        public void fnJsScrollTo(IWebElement pobjWebElement, string pstrField, bool pblScreenShot = true, bool pblHardStop = false, string pstrHardStopMsg = "Scroll To Failed and HardStop defined", bool alignToTop = false)
+        {
+            clsReportResult clsRR = new clsReportResult();
+            try
+            {
+                clsReportResult.fnLog("ScrollTo", "Step - Scroll to element: " + pstrField, Status.Info, false);
+                ((IJavaScriptExecutor)clsWebBrowser.objDriver).ExecuteScript($"arguments[0].scrollIntoView({alignToTop.ToString()});", pobjWebElement);
+                clsReportResult.fnLog("ScrollToPass", "Scrolled to element: " + pstrField, Status.Pass, pblScreenShot);
+            }
+            catch (Exception pobjException)
+            {
                 clsReportResult.fnLog("ScrollToFailed", "Failed Scroll to element: " + pstrField, Status.Fail, true, pblHardStop, pstrHardStopMsg);
                 fnExceptionHandling(pobjException);
             }
