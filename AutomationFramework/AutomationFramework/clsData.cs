@@ -204,7 +204,7 @@ namespace AutomationFramework
                         dtNewDate = DateTime.Today.AddDays(Convert.ToDouble(pstrDefaultValue));
                         pstrDefaultValue = dtNewDate.ToString("MM/dd/yyyy");
                     }
-                    if (pstrDefaultValue.StartsWith("TODAY"))
+                    if (pstrDefaultValue.ToUpper().Equals("TODAY"))
                     {
                         pstrDefaultValue = DateTime.Today.ToString("MM/dd/yyyy");
                     }

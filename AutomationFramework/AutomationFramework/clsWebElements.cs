@@ -20,34 +20,87 @@ namespace AutomationFramework
         public static string strAction = "";
 
 
-        public IList<IWebElement> fnGetWeList(string pstrLocator)
+        /// <summary>
+        /// Returns a list of web elemetns if exist using the By by parameter.
+        /// </summary>
+        /// <param name="by"></param>
+        /// <returns></returns>
+        public IList<IWebElement> fnGetWeList(By by)
         {
             try
             {
-                IList<IWebElement> pobjElement = clsWebBrowser.objDriver.FindElements(By.XPath(pstrLocator));
+                IList<IWebElement> pobjElement = clsWebBrowser.objDriver.FindElements(by);
                 return pobjElement;
             }
             catch (Exception pobjException)
             {
-                fnExceptionHandling(pobjException, "Ilist<WebElement>: " + pstrLocator + " doesn't exist", true);
+                fnExceptionHandling(pobjException, "Ilist<WebElement>: doesn't exist or cannot be found in current page.", true);
                 return null;
             }
         }
 
-        public IWebElement fnGetWe(string pstrLocator)
+        /// <summary>
+        /// Returns a list of web elemetns if exist using an xpath locator.
+        /// </summary>
+        /// <param name="pstrLocator"></param>
+        /// <returns></returns>
+        public IList<IWebElement> fnGetWeList(string pstrLocator) => fnGetWeList(By.XPath(pstrLocator));
+        
+        /// <summary>
+        /// Returns a web element based on By parameter.
+        /// </summary>
+        /// <param name="by"></param>
+        /// <returns></returns>
+        public IWebElement fnGetWe(By by)
         {
             try
             {
-                IWebElement pobjElement = clsWebBrowser.objDriver.FindElement(By.XPath(pstrLocator));
+                IWebElement pobjElement = clsWebBrowser.objDriver.FindElement(by);
                 return pobjElement;
             }
             catch (Exception pobjException)
             {
-                fnExceptionHandling(pobjException, "WebElement: " + pstrLocator + " doesn't exist", true);
+                fnExceptionHandling(pobjException, "WebElement: doesn't exist or cannot be found in current page.", true);
                 return null;
             }
         }
 
+        /// <summary>
+        /// Retunrs a web element based on xpath locator parameter.
+        /// </summary>
+        /// <param name="pstrLocator"></param>
+        /// <returns></returns>
+        public IWebElement fnGetWe(string pstrLocator) => fnGetWe(By.XPath(pstrLocator));
+
+        /// <summary>
+        /// Get Web Element Given a parent and a relative locator
+        /// </summary>
+        /// <param name="element"></param>
+        /// <param name="locator"></param>
+        /// <param name="descr"></param>
+        /// <returns></returns>
+        public IWebElement fnGetWe(IWebElement element, By locator, string descr = "")
+        {
+            try
+            {
+                IWebElement pobjElement = element.FindElement(locator);
+                return pobjElement;
+            }
+            catch (Exception pobjException)
+            {
+                this.fnExceptionHandling(pobjException, $"WebElement not found{(string.IsNullOrEmpty(descr) ? "" : $": {descr}")}", true);
+                return null;
+            }
+        }
+
+
+        /// <summary>
+        /// Perform an action to a specific web element.
+        /// </summary>
+        /// <param name="pobjWebElement"></param>
+        /// <param name="pstrAction"></param>
+        /// <param name="pstrTextEnter"></param>
+        /// <returns></returns>
         public object fnGetFluentWait(IWebElement pobjWebElement, string pstrAction, string pstrTextEnter = "")
         {
             objFluentWait = new DefaultWait<IWebDriver>(clsWebBrowser.objDriver);
@@ -69,6 +122,15 @@ namespace AutomationFramework
                     break;
                 case "Clear":
                     objFluentWait.Until(x => pobjWebElement).Clear();
+                    break;
+                case "CustomSednKeys":
+                    Actions action = new Actions(clsWebBrowser.objDriver);
+                    pobjWebElement.Click();
+                    action.KeyDown(Keys.Control).SendKeys(Keys.Home).Perform();
+                    pobjWebElement.Clear();
+                    Thread.Sleep(TimeSpan.FromMilliseconds(500));
+                    pobjWebElement.SendKeys(Keys.Delete);
+                    pobjWebElement.SendKeys(pstrTextEnter);
                     break;
             }
             return objFluentWait;
@@ -567,6 +629,9 @@ namespace AutomationFramework
                 case "SelectRadioBtnFail":
                     clsReportResult.fnLog("SelectRadioBtnFail", "Select Radio Button verification failed", Status.Fail, true, pblHardStop, pstrHardStopMsg);
                     break;
+                case "ClickableFail":
+                    clsReportResult.fnLog("ClickableFail", "Element Clickablen verification failed", Status.Fail, true, pblHardStop, pstrHardStopMsg);
+                    break;
                 case "Timed out after 10 seconds":
                     if (pobjException.InnerException.ToString().Contains("no such element: Unable to locate element"))
                     {
@@ -620,6 +685,29 @@ namespace AutomationFramework
             {
                 clsReportResult.fnLog("ScrollToFailed", "Failed Scroll to element: " + pstrField, Status.Fail, true, pblHardStop, pstrHardStopMsg);
                 fnExceptionHandling(pobjException);
+            }
+        }
+
+
+        public bool fnWaitToBeClickable(IWebElement pobjWebElement, string pstrField, bool pblScreenShot = true, bool pblHardStop = false, string pstrHardStopMsg = "Scroll To Failed and HardStop defined", int timeout = 5)
+        {
+            clsReportResult.fnLog("ClickableFail", "", Status.Info, false, pblHardStop, pstrHardStopMsg);
+            bool pblStatus = false;
+            IWebElement objWebElement;
+            try
+            {
+                objExplicitWait = new WebDriverWait(clsWebBrowser.objDriver, TimeSpan.FromSeconds(timeout));
+                objExplicitWait.IgnoreExceptionTypes(typeof(WebDriverTimeoutException));
+                objWebElement = objExplicitWait.Until(ExpectedConditions.ElementToBeClickable(pobjWebElement));
+                pblStatus = true;
+                return pblStatus;
+
+            }
+            catch (Exception pobjException)
+            {
+                clsReportResult.fnLog("ClickableFail", "Failed Scroll to element: " + pstrField, Status.Fail, true, pblHardStop, pstrHardStopMsg);
+                fnExceptionHandling(pobjException);
+                return pblStatus;
             }
         }
 
