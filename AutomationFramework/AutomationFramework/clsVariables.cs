@@ -25,7 +25,7 @@ namespace AutomationFramework
                     //Ignore and continue
                 }
                 string path;
-                switch (blLocalExecution)
+                switch (blLocalExecution.ToUpper())
                 {
                     case "LOCAL":
                         path = @"C:\AutomationProjects\AutomationSettings.xlsx";
